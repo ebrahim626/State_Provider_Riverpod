@@ -4,14 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:state_provider_riverpod/slider_provider.dart';
 
+final switchProvider = StateProvider<bool>((ref){
+  return false;
+});
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
-
   @override
   Widget build(BuildContext context, ref) {
-    final slider = ref.watch(sliderProvider);
     log('Full Build');
     return Scaffold(
       appBar: AppBar(
@@ -36,20 +37,43 @@ class HomeScreen extends ConsumerWidget {
               children: [
                 Consumer(
                   builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                    final slider = ref.watch(sliderProvider.select((state) => state.showPassword ));
+                    log('Show Password');
+                    return InkWell(
+                      onTap: () {
+                        final slidProvider = ref.read(sliderProvider.notifier);
+                        slidProvider.state = slidProvider.state.copyWith(showPassword: !slider);
+                      },
+                      child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: slider ? Icon(Icons.remove_red_eye) : Icon(Icons.remove_red_eye_outlined),
+                      ),
+                    );
+                  },
+                ),
+                Consumer(
+                  builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                    final slider = ref.watch(sliderProvider.select((state){return state.slider;}));
                     log('Red Container');
-                    Container(
-                      height: 50,
-                      width: 50,
-                      color: Colors.red..withOpacity(50),
+                    return Container(
+                      height: 200,
+                      width: 200,
+                      color: Colors.red.withOpacity(slider),
                     );
                   },
                 ),
               ],),
-
-            Slider(value: slider.slider, onChanged: (value){}),
+            Consumer(builder: (context,ref,build){
+              final slider = ref.watch(sliderProvider);
+              return Slider(value: slider.slider, onChanged: (value){
+                final slidProvider = ref.read(sliderProvider.notifier);
+                slidProvider.state = slidProvider.state.copyWith(slider: value);
+              });
+            }),
             Consumer(
               builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                log('message3');
+                log('Toggle Switch');
                 final toggleSwitch = ref.watch(switchProvider);
                 return Switch(value: toggleSwitch, onChanged: (value){
                   ref.read(switchProvider.notifier).state = value;

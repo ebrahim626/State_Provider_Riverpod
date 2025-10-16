@@ -11,7 +11,7 @@ class AppState {
 
   AppState({required this.slider, required this.showPassword});
 
-  AppState copyWith(double? slider, bool? showPassword) {
+  AppState copyWith({double? slider, bool? showPassword}) {
     return AppState(
       slider: slider ?? this.slider,
       showPassword: showPassword ?? this.showPassword,
