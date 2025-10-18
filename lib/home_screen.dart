@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
+import 'package:state_provider_riverpod/search_provider.dart';
 import 'package:state_provider_riverpod/slider_provider.dart';
 
 final switchProvider = StateProvider<bool>((ref){
@@ -13,6 +14,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+
     log('Full Build');
     return Scaffold(
       appBar: AppBar(
@@ -32,6 +34,19 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            TextField(
+              textAlign: TextAlign.center,
+              onChanged: (value){
+                ref.read(searchProvider.notifier).search(value);
+              },
+            ),
+            Consumer(
+              builder: (context, ref, child) {
+                final search = ref.watch(searchProvider);
+               return Text(search,style: TextStyle(fontSize: 20,color: Colors.red),);
+              },
+            ),
+            SizedBox(height: 20,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
