@@ -85,8 +85,8 @@ class HomeScreen extends ConsumerWidget {
             Consumer(
               builder: (BuildContext context, WidgetRef ref, Widget? child) {
                 log('Toggle Switch');
-                final onChange = ref.watch(searchProvider.select((state)=> state.isChange));
-                return Switch(value: onChange, onChanged: (value){
+                final isChange = ref.watch(searchProvider.select((state)=> state.isChange));
+                return Switch(value: isChange, onChanged: (value){
                   ref.read(searchProvider.notifier).onChange(value);
                 });
               },
