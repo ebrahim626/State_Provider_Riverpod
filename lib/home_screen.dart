@@ -1,13 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:state_provider_riverpod/search_provider.dart';
 import 'package:state_provider_riverpod/slider_provider.dart';
 
-final switchProvider = StateProvider<bool>((ref){
-  return false;
-});
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -42,8 +38,8 @@ class HomeScreen extends ConsumerWidget {
             ),
             Consumer(
               builder: (context, ref, child) {
-                final search = ref.watch(searchProvider);
-               return Text(search.search,style: TextStyle(fontSize: 20,color: Colors.red),);
+                final search = ref.watch(searchProvider.select((state) => state.search));
+               return Text(search,style: TextStyle(fontSize: 20,color: Colors.red),);
               },
             ),
             SizedBox(height: 20,),
@@ -69,7 +65,7 @@ class HomeScreen extends ConsumerWidget {
                 ),
                 Consumer(
                   builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                    final slider = ref.watch(sliderProvider.select((state){return state.slider;}));
+                    final slider = ref.watch(sliderProvider.select((state)=>state.slider));
                     log('Red Container');
                     return Container(
                       height: 200,
@@ -89,9 +85,9 @@ class HomeScreen extends ConsumerWidget {
             Consumer(
               builder: (BuildContext context, WidgetRef ref, Widget? child) {
                 log('Toggle Switch');
-                final toggleSwitch = ref.watch(switchProvider);
-                return Switch(value: toggleSwitch, onChanged: (value){
-                  ref.read(switchProvider.notifier).state = value;
+                final onChange = ref.watch(searchProvider.select((state)=> state.isChange));
+                return Switch(value: onChange, onChanged: (value){
+                  ref.read(searchProvider.notifier).onChange(value);
                 });
               },
             ),
