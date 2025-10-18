@@ -43,7 +43,7 @@ class HomeScreen extends ConsumerWidget {
             Consumer(
               builder: (context, ref, child) {
                 final search = ref.watch(searchProvider);
-               return Text(search,style: TextStyle(fontSize: 20,color: Colors.red),);
+               return Text(search.search,style: TextStyle(fontSize: 20,color: Colors.red),);
               },
             ),
             SizedBox(height: 20,),
